@@ -11,7 +11,6 @@ class AydymCalamApp extends StatelessWidget {
     return MaterialApp(
       title: 'Aýdym Çalar',
       debugShowCheckedModeBanner: false,
-      // Только туркменская локаль
       locale: const Locale('tk', 'TM'),
       supportedLocales: const [Locale('tk', 'TM')],
       theme: ThemeData(
