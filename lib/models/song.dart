@@ -4,7 +4,7 @@ class Song {
   final String artist;
   final String? album;
   final Duration duration;
-  final String? uri;
+  final String? data;
 
   Song({
     required this.id,
@@ -12,7 +12,7 @@ class Song {
     required this.artist,
     this.album,
     required this.duration,
-    this.uri,
+    this.data,
   });
 
   factory Song.fromQuery(Map<String, dynamic> data) {
@@ -22,7 +22,7 @@ class Song {
       artist: data['artist'] as String? ?? 'Näbelli aýdymçy',
       album: data['album'] as String?,
       duration: Duration(milliseconds: data['duration'] as int? ?? 0),
-      uri: data['uri'] as String?,
+      data: data['data'] as String?,
     );
   }
 
