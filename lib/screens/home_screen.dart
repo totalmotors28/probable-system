@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   artist: s.artist ?? 'Näbelli aýdymçy',
                   album: s.album,
                   duration: Duration(milliseconds: s.duration ?? 0),
-                  uri: s.uri,
+                  data: s.data,
                 ))
             .toList();
         _filtered = _songs;
@@ -92,11 +92,17 @@ class _HomeScreenState extends State<HomeScreen> {
     if (index < 0 || index >= _filtered.length) return;
     try {
       final song = _filtered[index];
-      final result = await _audioQuery.querySongById(song.id);
-      if (result.isEmpty || result.first.uri == null) return;
+      if (song.data == null || song.data!.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Faýl tapylmady')),
+          );
+        }
+        return;
+      }
 
       await _player.setAudioSource(
-        AudioSource.uri(Uri.parse(result.first.uri!)),
+        AudioSource.uri(Uri.parse(song.data!)),
       );
       _player.play();
       setState(() => _currentIndex = _songs.indexOf(song));
@@ -123,7 +129,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final currentFilteredIdx = _filtered.indexWhere(
       (s) => _songs.indexOf(s) == _currentIndex,
     );
-    final prev = (currentFilteredIdx - 1 + _filtered.length) % _filtered.length;
+    final prev =
+        (currentFilteredIdx - 1 + _filtered.length) % _filtered.length;
     _playSong(prev);
   }
 
