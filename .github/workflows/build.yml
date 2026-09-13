@@ -36,6 +36,21 @@ jobs:
 
       - run: flutter clean
       - run: flutter pub get
+
+      # ⬇️⬇️⬇️ ВОТ ЭТОТ ШАГ ЧИНИТ ОШИБКУ ⬇️⬇️⬇️
+      - name: Patch on_audio_query namespace
+        run: |
+          FILE=$(find $HOME/.pub-cache -path "*on_audio_query_android*/android/build.gradle" | head -n 1)
+          if [ -n "$FILE" ]; then
+            echo "Найден файл: $FILE"
+            sed -i 's/android {/android {\n    namespace "com.lucasjosino.on_audio_query"/' "$FILE"
+            echo "--- Патч применён ---"
+            cat "$FILE" | head -n 30
+          else
+            echo "Файл не найден!"
+          fi
+      # ⬆️⬆️⬆️ КОНЕЦ ФИКСА ⬆️⬆️⬆️
+
       - run: flutter build apk --release
 
       - uses: actions/upload-artifact@v4
